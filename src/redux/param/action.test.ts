@@ -41,7 +41,6 @@ import {
     StationDict,
     StationInfo,
 } from '../../constants/constants';
-import { CityCode } from '../../constants/city-config';
 import { SET_DEPS_STR } from '../helper/action';
 import { createMockAppStore, mockSimpleStationList } from '../../setupTests';
 
@@ -51,7 +50,7 @@ const mockNote1: Note = ['Note 1 ZH', 'Note 1 EN', 10, 10, true];
 const mockNote2: Note = ['Note 2 ZH', 'Note 2 EN', 20, 20, false];
 const mockUpdatedNote: Note = ['Note 2 ZH Updated', 'Note 2 EN', 25, 25, false];
 const mockInterchange1: InterchangeInfo = [
-    CityCode.HongKong,
+    'hongkong',
     'twl',
     '#000000',
     MonoColour.white,
@@ -59,14 +58,14 @@ const mockInterchange1: InterchangeInfo = [
     'Int 1 EN',
 ];
 const mockInterchange2: InterchangeInfo = [
-    CityCode.Guangzhou,
+    'guangzhou',
     'gz1',
     '#FFFFFF',
     MonoColour.black,
     'Int 2 ZH',
     'Int 2 EN',
 ];
-const mockUpdatedThemeInterchange = [CityCode.London, 'bakerloo', '#AAAAAA', MonoColour.white].concat(Array(2));
+const mockUpdatedThemeInterchange = ['london', 'bakerloo', '#AAAAAA', MonoColour.white].concat(Array(2));
 
 const mockStationList = {
     linestart: {

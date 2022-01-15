@@ -14,6 +14,7 @@ import { Provider } from 'react-redux';
 import { setCanvasScale, setCanvasToShow } from './redux/app/action';
 import { setFullParam } from './redux/param/action';
 import autoSaveScheduler from './util/auto-save-scheduler';
+import { fetchPaletteCityConfig } from './redux/data/action';
 
 declare global {
     interface Window {
@@ -106,6 +107,10 @@ getRmgStorage()
         }
 
         window.rmgStore = store;
+    })
+    .then(() => {
+        // fetch resources
+        store.dispatch(fetchPaletteCityConfig()).then();
     })
     .then(() => {
         renderApp();

@@ -14,8 +14,8 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { getTransText2 } from '../../utils';
-import { CityCode, cityList } from '../../constants/city-config';
 import { ColourHex, LanguageCode, MonoColour, PaletteEntry, Theme } from '../../constants/constants';
+import { useAppSelector } from '../../redux';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -53,11 +53,9 @@ const useStyles = makeStyles(() =>
 const useLineList = (theme: Theme) => {
     const [list, setList] = React.useState([] as PaletteEntry[]);
 
-    const listPromise = theme[0]
-        ? import(/* webpackChunkName: "colours" */ `../../constants/colours/${theme[0]}`).then(
-              module => module.default as PaletteEntry[]
-          )
-        : Promise.resolve([] as PaletteEntry[]);
+    const listPromise: Promise<PaletteEntry[]> = fetch(`https://railmapgen.github.io/rmg-palette/resources/palettes/${theme[0]}.json`)
+        .then(resp => resp.json())
+        .catch(() => []);
 
     useEffect(
         () => {
@@ -67,9 +65,7 @@ const useLineList = (theme: Theme) => {
             (async () => {
                 const data = await listPromise;
                 setList(
-                    theme[0] === CityCode.Other
-                        ? [{ ...data[0], colour: theme[2], fg: theme[3] || MonoColour.white }]
-                        : data
+                    theme[0] === 'other' ? [{ ...data[0], colour: theme[2], fg: theme[3] || MonoColour.white }] : data
                 );
             })();
         },
@@ -162,7 +158,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
     const colourChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let rgb = event.target.value;
         // setHexTemp(rgb);
-        props.onUpdate('theme', [CityCode.Other, 'other', rgb, props.theme[3]]);
+        props.onUpdate('theme', ['other', 'other', rgb, props.theme[3]]);
     };
 
     const hexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,13 +169,13 @@ export const CustomPanel = (props: ColourDialogProps) => {
         if (props.theme[0] !== 'other') {
             if (hex.match(/^#[0-9a-fA-f]{6}$/) !== null) {
                 // if hex valid, modify theme city and props.hex
-                let newTheme = [CityCode.Other, 'other', hex, props.theme[3]];
+                let newTheme = ['other', 'other', hex, props.theme[3]];
                 props.onUpdate('theme', newTheme);
                 // then lineList will be updated by hook (along with selection)
                 // then line will be updated by hook
             } else {
                 // if hex not valid, modify theme city only
-                let newTheme = [CityCode.Other, 'other', ...props.theme.slice(2)];
+                let newTheme = ['other', 'other', ...props.theme.slice(2)];
                 props.onUpdate('theme', newTheme);
                 // then lineList will be updated by hook (along with selection)
                 // then line will be updated by hook
@@ -197,7 +193,7 @@ export const CustomPanel = (props: ColourDialogProps) => {
     };
 
     const fgChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-        let newTheme = [CityCode.Other, 'other', props.theme[2], event.target.value];
+        let newTheme = ['other', 'other', props.theme[2], event.target.value];
         props.onUpdate('theme', newTheme);
     };
 
@@ -258,6 +254,8 @@ export const CustomPanel = (props: ColourDialogProps) => {
 const CitySelectItem = (props: { value: string; onChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) => {
     const { t, i18n } = useTranslation();
     const classes = useStyles();
+
+    const cityList = useAppSelector(state => state.data.paletteCityConfig);
 
     const items = useMemo(
         () =>

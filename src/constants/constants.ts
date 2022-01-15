@@ -1,5 +1,3 @@
-import { CityCode } from './city-config';
-
 export enum LoadingStatus {
     init = 'init',
     loading = 'loading',
@@ -70,7 +68,7 @@ export type ColourHex = `#${string}`;
  * @property 2 - background colour
  * @property 3 - foreground colour
  */
-export type Theme = [CityCode, string, ColourHex, MonoColour];
+export type Theme = [string, string, ColourHex, MonoColour];
 
 export type InterchangeInfo = [...Theme, ...Name];
 

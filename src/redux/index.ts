@@ -1,12 +1,14 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk, { ThunkMiddleware } from 'redux-thunk';
 import AppReducer from './app/reducer';
+import DataReducer from './data/reducer';
 import ParamReducer from './param/reducer';
 import HelperReducer from './helper/reducer';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const rootReducer = combineReducers({
     app: AppReducer,
+    data: DataReducer,
     param: ParamReducer,
     helper: HelperReducer,
 });
